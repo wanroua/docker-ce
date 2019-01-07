@@ -259,6 +259,7 @@ docker run --name  nginx2 -it   --network container:nginx  nginx /bin/bash
 
 dockerd守护进程的C/S，其默认仅监听Unix SOcket格式的地址，/var/run/docker.sock;如果使用TCP套接字， /etc/docker/daemon.json:
 "hosts": ["tcp://0.0.0.0:2375", "unix:///var/run/docker.sock"] 也可向dockerd直接传递“-H|--host”选项;
+#修改配置文件后，可执行 systemctl reset-failed docker.service重载下配置文件(注：修改配置文件需暂停已经开启的容器并关闭docker服务)
 
 配置后，其他机器链接：docker -H  172.18.0.1：2375  ps #链接远程docker机器执行命令
 
