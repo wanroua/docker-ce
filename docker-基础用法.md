@@ -301,3 +301,45 @@ ip netns exec r1 ip linke set dev  veth1.2 name eth0
 核心选项为bip，即bridge ip之意，用于指定docker0桥自身的IP地址;其它选项可通过此地址计算得出。
 ```
 
+#### docker关联目录
+
+```bash
+docker  run --name nginx -it -v  /data   nginx /bin/bash
+#-v  /data/   在容器上指定data目录与本地机器关联，在本机查看关联到的目录
+docker inspect nginx 
+
+        "Mounts": [
+            {
+                "Type": "volume",
+                "Name": "490b52ae55d66d5300ad06212662e9d5e1b9d2560768cb81ec23b0cfbd819eb9",
+                "Source": "/var/lib/docker/volumes/490b52ae55d66d5300ad06212662e9d5e1b9d2560768cb81ec23b0cfbd819eb9/_data",
+                "Destination": "/data",
+                "Driver": "local",
+                "Mode": "",
+                "RW": true,
+                "Propagation": ""
+            }
+        ],
+
+关联到本地指定目录：
+docker run  --name nginx -it -v /data/docker/b1:/data  nginx  /bin/bash
+#容器中的data目录关联到本地机器的/data/docker/b1目录上。(注：本地目录操作什么，容器上也会有对应的数据，就算删除了这个容器，在以这样的执行数据还是在)
+
+
+nginx容器：
+docker  run -it --name nginx -v /docker/data/v1:/data/ nginx /bin/bash
+#创建nginx容器并创建data目录跟宿主机关联到/docker/data/v1中
+
+docker run --name wooyun -it --network container:nginx  --volumes-from nginx chanhoo/wooyun /bin/bash
+#创建wooyun容器，并复制nginx的网络和volumes关联器
+```
+
+#### 从docker inspect中获取指定数据段
+
+```bash
+docker inspect  -f {{.Mounts}} nginx
+或
+docker inspect  -f {{.NetworkSettings.Gateway}} nginx
+#注意，Gateway在NetworkSettings的代码段下，多个容器可挂载同一个宿主机目录
+```
+
