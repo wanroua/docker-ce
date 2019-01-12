@@ -466,6 +466,16 @@ Sytax
 	ENTRYPOINT ["<executable>","<param1>","param2"]
 docker run 命令传入的命令参数会覆盖CMD指令的内容并且附加到ENTRYPOINT命令最后做为其参数使用
 Dockerfile文件中也可以存在多个ENTRYPOINT指令，但仅有最后一个会生效
+
+
+USER
+用于指定允许images时的或允许Dockerfile中任何RUN、CMd或ENTRYPOINT
+指令指定的程序时的用户名或UID
+默认情况下，container的允许身份为root用户
+
+Syntax
+USER <UID>|<UserName>
+需要注意的是，<UID>可以为任意数字，但实践中其必须为/etc/passwd中某用户的有效UID，否则，docker run 命令将运行失败
 ```
 
 ####  实例
